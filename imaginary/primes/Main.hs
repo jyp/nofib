@@ -8,12 +8,13 @@ suCC x = x + 1
 isdivs :: Int -> Int -> Bool
 isdivs n x = mod x n /= 0
 
-the_filter :: MuList Int -> MuList Int
-the_filter ns = filterMu (isdivs n) ns
-  where n = headMu ns
+the_filter :: NuList Int -> NuList Int
+the_filter ns0 = thaw $ filterMu (isdivs n) $ freeze ns
+  where n = headNu ns0
+        ns = tailNu ns0
 
 primes :: NuList Int
-primes = fmap headMu (iterateNu the_filter (freeze $ iterateNu suCC 2))
+primes = fmap headNu (iterateNu the_filter (iterateNu suCC 2))
 
 run x = print $ freeze primes `atMu` x
   
