@@ -1,18 +1,22 @@
+import Fusion
 
 import System.Environment
 
 suCC :: Int -> Int
 suCC x = x + 1
 
-isdivs :: Int  -> Int -> Bool
+isdivs :: Int -> Int -> Bool
 isdivs n x = mod x n /= 0
 
-the_filter :: [Int] -> [Int]
-the_filter (n:ns) = filter (isdivs n) ns
+the_filter :: MuList Int -> MuList Int
+the_filter ns = filterMu (isdivs n) ns
+  where n = headMu ns
 
-primes :: [Int]
-primes = map head (iterate the_filter (iterate suCC 2))
+primes :: NuList Int
+primes = fmap headMu (iterateNu the_filter (freeze $ iterateNu suCC 2))
 
+run x = print $ freeze primes `atMu` x
+  
 main = do
 	[arg] <- getArgs
-	print $ primes !! (read arg)
+	run $ read arg
